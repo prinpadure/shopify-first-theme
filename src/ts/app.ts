@@ -1,3 +1,3 @@
 import Vue from "vue";
-
-var header = new Vue({el: "#header"});
+import $ from "jquery";
+import "bootstrap";

@@ -1,0 +1,38 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img src="{{section.settings.logo | img_url: 'master'}}" alt="" width="{{section.settings.logo_max_width}}px">
+    </a>
+    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% for link in linklists[section.settings.menu].links %}
+                {% if link.links != blank %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ link.url }}">
+                            {{ link.title }}
+                            {% include 'icon-arrow-down' %}
+                        </a>
+                        <ul class="navbar-nav mr-auto">
+                            {% for childlink in link.links %}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ childlink.url }}">
+                                        {{ childlink.title }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ link.url }}">
+                            {{ link.title }}
+                        </a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</nav>
