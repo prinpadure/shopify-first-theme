@@ -1,6 +1,7 @@
 node_modules/
 assets/app.css
 assets/app.js
+dist/
 package-lock.json
 .prettierrc
 config.yml
