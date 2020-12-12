@@ -1,7 +1,7 @@
 {% if cart.item_count > 0 %}
   <h1>{{ 'cart.general.title' | t }}</h1>
 
-  <form action="/cart" method="post" novalidate>
+  <form action="/cart" method="post" class="cart-form" novalidate>
     <table class="responsive-table">
       <thead class="small--hide">
         <tr>
@@ -13,81 +13,93 @@
       </thead>
       <tbody>
 
-        {% for item in cart.items %}
-
-        {% comment %}
-
-        Cart Item Template
-        =====================
-        The data-label attributes on <td> elements are mobile-friendly
-        helpers used for responsive-table labels
-        {% endcomment %}
+        <template v-for="(item, index) in cart?.items">
 
           <tr class="responsive-table-row">
-
             <td data-label="{{ 'customer.order.product' | t }}">
-
-              {% if item.image != blank %}
+              <template v-if="item.image">
+                <a :href="item.url">
+                  <img :src="item.image" width="150" class="img-fluid mr-4" alt="">
+                </a>
+              </template>
+              <!-- {% if item.image != blank %}
                 <a href="{{ item.url | within: collections.all }}">
                   {{ item | img_url: '240x240' | img_tag: item.title }}
                 </a>
-              {% endif %}
-
+              {% endif %} -->
             </td>
             <td>
-              <a href="{{ item.url }}">{{ item.product.title }}</a>
-
-              {% unless item.product.has_only_default_variant %}
+              <a href="item.url">${ item.product_title }</a>
+              <template v-if="!item.product_has_only_default_variant"> 
+                <p>${ item.variant_title }</p>
+              </template>
+              <!-- {% unless item.product.has_only_default_variant %}
                 <p>{{ item.variant.title }}</p>
               {% endunless %}
-
-              <p>{{ item.vendor }}</p>
-
-              {%- assign property_size = item.properties | size -%}
-
+   -->
+              <p>${ item.vendor }</p>
+  
+              <!-- {%- assign property_size = item.properties | size -%}
+  
               {% if property_size > 0 %}
                 {% for p in item.properties %}
                   {% unless p.last == blank %}
                   {{ p.first }}:
-
+  
                   {% if p.last contains '/uploads/' %}
                     <a href="{{ p.last }}">{{ p.last | split: '/' | last }}</a>
                   {% else %}
                     {{ p.last }}
                   {% endif %}
-
+  
                   {% endunless %}
                 {% endfor %}
-              {% endif %}
-
-              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">
+              {% endif %} -->
+  
+              <a href="'/cart/change?line=' + index + '&amp;quantity=0'">
                 <small>{{ 'cart.general.remove' | t }}</small>
               </a>
             </td>
             <td data-label="{{ 'cart.label.price' | t }}">
-              {% if item.original_line_price != item.line_price %}
+              <template v-if="item.original_line_price != item.line_price">
+                <span class="visually-hidden">{{ 'cart.label.discounted_price' | t }}</span>
+                ${ item.price + cart.currency }
+                <span class="visually-hidden">{{ 'cart.label.original_price' | t }}</span>
+                <s>${ item.original_price + cart.currency }</s>
+              </template>
+              <template v-else>
+                ${ item.price + cart.currency }
+              </template>
+              <!-- {% if item.original_line_price != item.line_price %}
                 <span class="visually-hidden">{{ 'cart.label.discounted_price' | t }}</span>
                 {{ item.price | money }}
                 <span class="visually-hidden">{{ 'cart.label.original_price' | t }}</span>
                 <s>{{ item.original_price | money }}</s>
               {% else %}
                 {{ item.price | money }}
-              {% endif %}
+              {% endif %} -->
             </td>
             <td data-label="{{ 'cart.label.quantity' | t }}">
               <input type="number"
                      name="updates[]"
-                     id="updates_{{ item.key }}"
-                     value="{{ item.quantity }}"
+                     :id="'updates_' + item.key"
+                     v-model="item.quantity"
                      min="0"
                      aria-label="{{ 'cart.general.item_quantity' | t }}">
             </td>
             <td data-label="{{ 'cart.label.total' | t }}">
-              {{ item.line_price | money }}
+              ${ item.price * item.quantity + cart.currency }
             </td>
           </tr>
-
-        {% endfor %}
+          {% comment %}
+  
+          Cart Item Template
+          =====================
+          The data-label attributes on <td> elements are mobile-friendly
+          helpers used for responsive-table labels
+  
+          {% endcomment %}
+        </template>
       </tbody>
     </table>
 
