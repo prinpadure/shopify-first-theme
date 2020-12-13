@@ -29,7 +29,7 @@
               {% endif %} -->
             </td>
             <td>
-              <a href="item.url">${ item.product_title }</a>
+              <a :href="item.url">${ item.product_title }</a>
               <template v-if="!item.product_has_only_default_variant"> 
                 <p>${ item.variant_title }</p>
               </template>
@@ -56,7 +56,7 @@
                 {% endfor %}
               {% endif %} -->
   
-              <a href="'/cart/change?line=' + index + '&amp;quantity=0'">
+              <a :href="'/cart/change?line=' + index + '&amp;quantity=0'">
                 <small>{{ 'cart.general.remove' | t }}</small>
               </a>
             </td>
@@ -114,7 +114,7 @@
       <p>{{ 'cart.general.savings' | t }} {{ cart.total_discounts | money }}</p>
     {% endif %}
     <p>{{ 'cart.general.shipping_at_checkout' | t }}</p>
-    <input type="submit" name="update" value="{{ 'cart.general.update' | t }}">
+    <input type="button" name="update" value="{{ 'cart.general.update' | t }}" @click="updateCart">
     <input type="submit" name="checkout" class="button" value="{{ 'cart.general.checkout' | t }}">
   </form>
 {% else %}

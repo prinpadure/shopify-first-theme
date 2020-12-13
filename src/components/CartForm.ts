@@ -21,10 +21,13 @@ if (document.querySelector(cartFormClass)) {
       updateCart() {
         let cart: any = this.cart;
         if (cart) {
-          let result = cart.items.reduce((acc: any, target: { variant_id: any; quantity: any }) => ({
-            ...acc,
-            [target.variant_id]: target.quantity
-          }));
+          let result = cart.items.reduce((acc: any, target: { variant_id: any; quantity: any }) => {
+            console.log(acc);
+            return {
+              ...acc,
+              [target.variant_id]: target.quantity
+            };
+          }, {});
           axios
             .post("/cart/update.js", { updates: result })
             .then(response => {})
