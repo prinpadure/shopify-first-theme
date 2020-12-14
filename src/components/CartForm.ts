@@ -18,11 +18,11 @@ if (document.querySelector(cartFormClass)) {
       this.getCart();
     },
     methods: {
-      updateCart() {
+      updateCart(items: any) {
+        console.log(items);
         let cart: any = this.cart;
         if (cart) {
           let result = cart.items.reduce((acc: any, target: { variant_id: any; quantity: any }) => {
-            console.log(acc);
             return {
               ...acc,
               [target.variant_id]: target.quantity
