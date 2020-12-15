@@ -1,6 +1,8 @@
 .navbar {
+  width: 100%;
   &__search-icon {
     fill: $color-navbar-item;
+
     &:hover {
       fill: $color-navbar-item;
     }
