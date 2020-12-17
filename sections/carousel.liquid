@@ -1,9 +1,11 @@
-<section class="image-carousel-fade">
+<section class="carousel">
     <div class="carousel slide carousel-fade" data-ride="carousel" id="carouselExampleFade">
         <div class="carousel-inner">
             {% for block in section.blocks %}
                 <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                    <img alt="" class="d-block w-100" src="{{block.settings.image | img_url: 'master'}}">
+                    <div class="carousel__image">
+                        <img alt="" class="d-block w-100" src="{{block.settings.image | img_url: 'master'}}">
+                    </div>
                     <div class="carousel-caption d-none d-md-block">
                         <h5>{{block.settings.title}}</h5>
                     </div>
@@ -44,7 +46,7 @@
     ],
     "presets": [
         {
-            "name": "Image carousel cross-fade",
+            "name": "Image carousel",
             "category": "Image"
         }
     ]
