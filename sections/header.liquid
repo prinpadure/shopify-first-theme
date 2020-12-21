@@ -11,17 +11,93 @@
   - Home page only: only shows on the home page
 {%- endcomment -%}
 <section data-section-id="{{ section.id }}" data-section-type="header">
-    <header class="header header-light bg-light header-sticky">
-        {% include 'navbar' %}
+    <header class="header">
+        {% assign opacity = 100 | minus: section.settings.background_transparency | times: 0.01 %}
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: {{ section.settings.background_color | color_modify: 'alpha', opacity }}">
+            <div class="container">
+                <div class="row">
+                    <a class="navbar-brand" href="#">
+                        <img src="{{section.settings.logo | img_url: 'master'}}" alt="" width="{{section.settings.logo_max_width}}px">
+                    </a>
+                    <button aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbarSupportedContent" data-toggle="collapse" type="button">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="col-auto mr-auto">
+                            <ul class="navbar-nav">
+                                {% for link in linklists[section.settings.menu].links %}
+                                    {% if link.links != blank %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ link.url }}">
+                                                {{ link.title }}
+                                                {% include 'icon-arrow-down' %}
+                                            </a>
+                                            <ul class="navbar-nav mr-auto">
+                                                {% for childlink in link.links %}
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" href="{{ childlink.url }}">
+                                                            {{ childlink.title }}
+                                                        </a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% else %}
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="{{ link.url }}">
+                                                {{ link.title }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-auto">
+                            <ul class="navbar-nav">
+                                <!-- <li class="nav-item">
+                                            <a class="nav-link">
+                                                <div class="navbar__search-icon">
+                                                    {% include 'icon-search' %}
+                                                </div>
+                                            </a>
+                                        </li> -->
+                                <li class="nav-item">
+                                    <a class="nav-link navbar__cart" href="{{ routes.cart_url }}">
+                                        <span>Cart</span>
+                                        <span class="navbar__cart-count">{{ cart.item_count }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
     </header>
 
 </section>
 
+
+{% if section.settings.sticky == true %}
+    <style>
+        #shopify-section-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+            width: 100%;
+        }
+    </style>
+{% endif %}
+
+
+{%- assign maxWidth = section.settings.logo_max_width -%}
 {% if section.settings.logo != blank %}
     <style>
     .logo-image {
       display: block;
-      max-width: {{ section.settings.logo_max_width }}px;
+      max-width: {{ maxWidth }}px;
     }
   </style>
 {% endif %}
@@ -65,7 +141,7 @@
             "type": "range",
             "id": "logo_max_width",
             "min": 20,
-            "max": 200,
+            "max": 100,
             "step": 10,
             "unit": "px",
             "label": "Custom logo width",
@@ -75,6 +151,28 @@
             "id": "menu",
             "label": "Menu",
             "default": "main-menu"
+        }, {
+            "type": "header",
+            "content": "Optional"
+        }, {
+            "type": "checkbox",
+            "id": "sticky",
+            "label": "Sticky Header",
+            "default": false
+        }, {
+            "type": "color",
+            "id": "background_color",
+            "label": "Background Color",
+            "default": "#ffffff"
+        }, {
+            "type": "range",
+            "id": "background_transparency",
+            "min": 0,
+            "max": 100,
+            "step": 5,
+            "unit": "%",
+            "label": "Background transparency",
+            "default": 0
         }
     ]
 }
