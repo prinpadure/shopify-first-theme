@@ -3,9 +3,9 @@
         <div class="carousel-inner">
             {% for block in section.blocks %}
                 <div class="carousel-item {% if forloop.first %} active {% endif %}">
-                    <div class="carousel__image">
-                        <img alt="" class="d-block" src="{{block.settings.image | img_url: 'master'}}">
-                    </div>
+                    {% assign color-black = "#000" | color_modify: "alpha", 0.2 %}
+                    <div class="carousel__image" style="background-image: linear-gradient({{color-black}}, {{color-black}}),
+                                                                                                url({{block.settings.image | img_url: 'master'}})"></div>
                     <div class="carousel-caption d-none d-md-block">
                         <h5>{{block.settings.title}}</h5>
                     </div>
@@ -22,7 +22,12 @@
         </a>
     </div>
 </section>
-
+<style>
+    .carousel__image {
+        background-position: top;
+        background-size: cover;
+    }
+</style>
 {% schema %}
 
 {
