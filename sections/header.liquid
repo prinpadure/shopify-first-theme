@@ -13,7 +13,7 @@
 <section data-section-id="{{ section.id }}" data-section-type="header">
     <header class="header">
         {% assign opacity = 100 | minus: section.settings.background_transparency | times: 0.01 %}
-        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: {{ section.settings.background_color | color_modify: 'alpha', opacity }}">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background-color: {{ section.settings.background_color | color_modify: 'alpha', opacity }}; color: {{ section.settings.text_color }};">
             <div class="container">
                 <a class="navbar-brand" href="#">
                     <img src="{{section.settings.logo | img_url: 'master'}}" alt="" width="{{section.settings.logo_max_width}}px">
@@ -73,22 +73,36 @@
             </div>
         </nav>
     </header>
-
 </section>
 
-
-{% if section.settings.sticky == true %}
-    <style>
-        #shopify-section-header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 10;
-            width: 100%;
-        }
-    </style>
+{% if section.settings.overlap == true %}
+    {% assign position = "absolute" %}
+{% elsif section.settings.sticky == true %}
+    {% assign position = "fixed" %}
 {% endif %}
+
+{% if position and request.page_type == 'index' %}
+    {% style %}
+
+#shopify-section-header {
+    position: {{position}};
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    width: 100%;
+}
+
+{% endstyle %}
+{% endif %}
+
+{% style %}
+
+a.nav-link {
+    color: {{ section.settings.text_color }} !important;
+}
+
+{% endstyle %}
 
 
 {%- assign maxWidth = section.settings.logo_max_width -%}
@@ -152,17 +166,12 @@
             "default": "main-menu"
         }, {
             "type": "header",
-            "content": "Optional"
+            "content": "Colors"
         }, {
-            "type": "checkbox",
-            "id": "overlap",
-            "label": "Overlap Header On Top",
-            "default": false
-        }, {
-            "type": "checkbox",
-            "id": "sticky",
-            "label": "Sticky Header (if overlap is false)",
-            "default": false
+            "type": "color",
+            "id": "text_color",
+            "label": "Text Color",
+            "default": "#303030"
         }, {
             "type": "color",
             "id": "background_color",
@@ -177,6 +186,19 @@
             "unit": "%",
             "label": "Background transparency",
             "default": 0
+        }, {
+            "type": "header",
+            "content": "Optional settings for homepage"
+        }, {
+            "type": "checkbox",
+            "id": "overlap",
+            "label": "Overlap Header On Top",
+            "default": false
+        }, {
+            "type": "checkbox",
+            "id": "sticky",
+            "label": "Sticky Header (if overlap is false)",
+            "default": false
         }
     ]
 }
